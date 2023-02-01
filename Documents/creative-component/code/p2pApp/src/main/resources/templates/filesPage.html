@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Files</title>
+</head>
+<body>
+<input type="text" name="fileName">
+<button onclick="window.location.href='/findFile?fileName=' + document.getElementsByName('fileName')[0].value">Find File</button>
+
+<ul th:each="ip : ${owners}">
+    <li th:text="${ip}"></li>
+</ul>
+
+</body>
+</html>
