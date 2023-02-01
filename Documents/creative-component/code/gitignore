@@ -66,3 +66,5 @@ server/node_modules/
 .env
 
 server/config/
+config/
+node_modules/
