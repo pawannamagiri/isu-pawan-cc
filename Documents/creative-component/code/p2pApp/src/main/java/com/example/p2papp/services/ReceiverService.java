@@ -2,6 +2,7 @@ package com.example.p2papp.services;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -13,6 +14,9 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class ReceiverService {
 
+    @Value("${SERVER_ADDRESS}")
+    private String server;
+
     public String[] findFileOwner(String fileName) {
 
 
@@ -23,7 +27,7 @@ public class ReceiverService {
 
 
 
-        String url = "http://localhost:3000/find?fileName="+fileName;
+        String url = server+"/find?fileName="+fileName;
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET,null ,String.class);
 
         System.out.println("Response status code: " + response.getStatusCode());

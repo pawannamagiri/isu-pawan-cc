@@ -4,6 +4,7 @@ package com.example.p2papp.controllers;
 import com.example.p2papp.services.ReceiverService;
 import com.example.p2papp.services.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -14,6 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Author @ Pawan Namagiri
@@ -56,18 +61,24 @@ public class MainController {
     }
 
     @GetMapping("/download")
-    public ResponseEntity<FileSystemResource> downloadFile() {
-        File file = new File("Users/pawannamagiri/Desktop/imp-docs/PawanSaiNamagiriResume.pdf");
-        FileSystemResource resource = new FileSystemResource(file);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-        headers.add("Pragma", "no-cache");
-        headers.add("Expires", "0");
-        headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", file.getName()));
+    public ResponseEntity<ByteArrayResource> downloadFile(@RequestParam String fileName) throws IOException {
+        File file = new File(System.getProperty("user.home")+"/Desktop/p2p-files/"+fileName);
+
+        HttpHeaders header = new HttpHeaders();
+        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+fileName);
+        header.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        header.add("Pragma", "no-cache");
+        header.add("Expires", "0");
+
+        Path path = Paths.get(file.getAbsolutePath());
+        ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
+
         return ResponseEntity.ok()
-                .headers(headers)
+                .headers(header)
                 .contentLength(file.length())
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
                 .body(resource);
     }
+
+
 }

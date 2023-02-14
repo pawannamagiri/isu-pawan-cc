@@ -45,7 +45,7 @@ public class RegisterService {
 
 
 
-        String url = "http://localhost:3000/register";
+        String url = server+"/register";
 
         RestTemplate restTemplate = new RestTemplate();
 
